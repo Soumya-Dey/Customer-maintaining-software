@@ -27,6 +27,7 @@ class Product(models.Model):
     category = models.CharField(max_length = 200, choices = CATEGORY, null = True)
     description = models.CharField(max_length = 300, null = True, blank = True)
     date_created = models.DateTimeField(auto_now_add = True, null = True)
+    # a product can have multiple tags as well as a tag can be related to multiple products
     tags = models.ManyToManyField(Tag)
 
     def __str__(self):
@@ -39,7 +40,12 @@ class Order(models.Model):
         ('Delivered', 'Delivered')
     )
 
+    def __str__(self):
+        return self.product.name
+
+    # a customer can have many orders but the vice versa is not true
     customer = models.ForeignKey(Customer, null = True, on_delete = models.SET_NULL)
+    # a product can be related to many orders but the vice versa is not true
     product = models.ForeignKey(Product, null = True, on_delete = models.SET_NULL)
     date_created = models.DateTimeField(auto_now_add = True, null = True)
     status = models.CharField(max_length = 200, choices = STATUS, null = True)
