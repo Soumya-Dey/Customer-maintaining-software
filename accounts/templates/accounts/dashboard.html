@@ -14,11 +14,18 @@
             <a class="btn btn-primary  btn-sm btn-block" href="">Create Customer</a>
             <table class="table table-sm">
                 <tr>
-                    <th></th>
                     <th>Customer</th>
-                    <th>Orders</th>
+                    <th>Phone</th>
+                    <th></th>
                 </tr>
 
+                {% for c in customers %}
+                <tr>
+                    <td>{{c.name}}</td>
+                    <td>{{c.phone}}</td>
+                    <td><a class="btn btn-sm btn-info" href="{% url 'customer' c.id %}">View</a></td>
+                </tr>
+                {% endfor %}
             </table>
         </div>
     </div>
@@ -37,6 +44,15 @@
                     <th>Remove</th>
                 </tr>
 
+                {% for o in orders %}
+                <tr>
+                    <td>{{o.product.name}}</td>
+                    <td>{{o.date_created}}</td>
+                    <td>{{o.status}}</td>
+                    <td><a class="btn btn-sm btn-info" href="">Update</a></td>
+                    <td><a class="btn btn-sm btn-danger" href="">Remove</a></td>
+                </tr>
+                {% endfor %}
             </table>
         </div>
     </div>
