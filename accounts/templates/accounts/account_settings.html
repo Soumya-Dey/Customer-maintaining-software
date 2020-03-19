@@ -1,0 +1,55 @@
+{%  extends 'accounts/main.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+	.profile-pic{
+		width: 94%;
+		height: 200px;
+		margin: 0 auto;
+		background-position: center;
+		background-size: cover;
+		border-radius: 6px
+	}
+
+	.logout_text{
+		text-align: center;
+	}
+
+	.cont{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.back-btn{
+		width: 94%;
+	}
+</style>
+
+<br>
+<div class="row">
+	<div class="col-md-3">
+		<div class="card card-body cont">
+			<a class="btn btn-sm btn-info back-btn" href="{% url 'home' %}"> &#8592; Back to Profile</a>
+			<br>
+			<img class="profile-pic" src="{{request.user.customer.profile_pic.url}}" >
+			<hr>
+			<h5 class="logout_text">{{request.user}}</h5>
+		
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="card card-body">
+			<!-- enctype="multipart/form-data" is for sending multiple files as POST -->
+			<form method="POST" action="" enctype="multipart/form-data"> 
+				{% csrf_token %}
+				{{form.as_p}}
+		
+			<input class="btn btn-sm btn-primary" type="submit" value="Update Profile">
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

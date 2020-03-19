@@ -21,10 +21,7 @@ def allowed_users(allowed_user_roles = []):
             if group in allowed_user_roles:    
                 return view_func(request, *args, **kwargs)
             else:
-                if group == 'Customer':
-                    return redirect('user_page')
-                else:
-                    return HttpResponse('You are not authorized to view this page!')
+                return HttpResponse('You are not authorized to view this page!')
 
         return wrapper_func
     return decorator_func

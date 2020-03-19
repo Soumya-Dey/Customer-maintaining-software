@@ -7,9 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 
 from .models import *
-from .forms import OrderForm, RegisterUserForm
+from .forms import OrderForm, RegisterUserForm, CustomerForm
 from .filters import OrderFilter
-from .decorators import unauthenticated_user, allowed_users
+from .decorators import unauthenticated_user, allowed_users, admin_only
 
 # functions that return different views for different url routes
 @unauthenticated_user # restricting a already logged in user to view the register page
@@ -23,6 +23,7 @@ def registerPage(request):
             user = form.save()
             group = Group.objects.get(name = 'Customer')
             user.groups.add(group)
+            Customer.objects.create(user = user)
             
             messages.success(request, 'Account successfully created for ' + form.cleaned_data.get('username'))
 
@@ -60,16 +61,43 @@ def logoutUser(request):
     logout(request)
     return redirect('login')
 
-
+@login_required(login_url='login')
+@allowed_users(allowed_user_roles=['Customer'])
 def userPage(request):
-    context = {}
+    orders = request.user.customer.order_set.all()
+    order_delivered = orders.filter(status='Delivered')
+    order_pending = orders.filter(status='Pending')
+
+    context = {
+        'orders': orders,
+        'totalOrders': orders.count(),
+        'deliveredCount': order_delivered.count(),
+        'pendingCount': order_pending.count()
+    }
 
     return render(request, 'accounts/user.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_user_roles=['Customer'])
+def accountSettings(request):
+    customer = request.user.customer
+    form = CustomerForm(instance=customer)
+
+    if request.method == 'POST':
+        form = CustomerForm(request.POST, request.FILES, instance=customer)
+        if form.is_valid():
+            form.save()
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'accounts/account_settings.html', context)
 
 # login in required to view these pages
 # if not logged in then the user id redirected to the login page
 @login_required(login_url='login')
-@allowed_users(allowed_user_roles=['Admin'])
+@admin_only
 def home(request):
     # fetching data from the database models
     customers = Customer.objects.all()

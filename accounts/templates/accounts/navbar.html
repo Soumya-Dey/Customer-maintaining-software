@@ -44,6 +44,8 @@
 
     {% if request.user.is_staff %}
     <a class="admin_btn btn btn-sm btn-info" href="/admin">Admin page</a>
+    {% else %}
+    <a class="admin_btn btn btn-sm btn-info" href="{% url 'account' %}">Settings</a>
     {% endif %}
   </div>
 </nav>
