@@ -11,6 +11,8 @@ urlpatterns = [
 
     # for home page
     path('', views.home, name="home"),
+    # for user profile page
+    path('user/', views.userPage, name='user_page'),
     # for products page
     path('products/', views.products, name="products"),
     # for customer page [pk or primary key here is the customer id]
