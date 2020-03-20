@@ -21,9 +21,6 @@ def registerPage(request):
 
         if form.is_valid():
             user = form.save()
-            group = Group.objects.get(name = 'Customer')
-            user.groups.add(group)
-            Customer.objects.create(user = user)
             
             messages.success(request, 'Account successfully created for ' + form.cleaned_data.get('username'))
 
